@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import tourRouter from './routes/tourRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import process from 'process';
 import { dirname } from 'dirname-filename-esm';
 
 const app = express();
