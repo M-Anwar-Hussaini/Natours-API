@@ -1,16 +1,21 @@
 import Tour from '../models/tourModel.js';
 
-export const getAllTours = (req, res) => {
-  console.log(req.requestTime);
-
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    // results: tours.length,
-    // data: {
-    //   tours,
-    // },
-  });
+export const getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+    res.status(200).json({
+      status: 'success',
+      result: tours.length,
+      data: {
+        tours,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: error,
+    });
+  }
 };
 
 export const getTour = async (req, res) => {
@@ -23,7 +28,7 @@ export const getTour = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(404).json({
       status: 'fail',
       message: error.message,
     });
