@@ -5,14 +5,49 @@ const tourSchema = new Schema({
     required: [true, 'A tour must have a name.'],
     unique: true,
   },
-  rating: {
+  duration: {
+    type: Number,
+    required: [true, 'A tour must have a duration.'],
+  },
+  maxGroupSize: {
+    type: Number,
+    required: [true, 'A tour must have a group size.'],
+  },
+  difficulty: {
+    type: String,
+    required: [true, 'A tour must have a difficulty.'],
+  },
+  ratingsAverage: {
     type: Number,
     default: 4.5,
+  },
+  ratingsQuantity: {
+    type: Number,
+    default: 0,
   },
   price: {
     type: Number,
     required: [true, 'A tour must have a price.'],
   },
+  priceDiscount: Number,
+  summary: {
+    type: String,
+    trim: true,
+    required: [true, 'A tour must have a summary'],
+  },
+  description: {
+    type: String,
+  },
+  imageCover: {
+    type: String,
+    required: [true, 'A tour must have a cover image.'],
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  images: [String],
+  startDates: [Date],
 });
 
 export default model('Tour', tourSchema);
