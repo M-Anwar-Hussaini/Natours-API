@@ -1,5 +1,12 @@
 import Tour from '../models/tourModel.js';
 
+export const aliasTopTours = async (req, res, next) => {
+  req.query.limit = 5;
+  req.query.sort = '-ratingAverage,price';
+  req.query.fields = 'name,price,ratingAverage,summary,difficulty';
+  next();
+};
+
 export const getAllTours = async (req, res) => {
   try {
     // 1b) Filtering
@@ -17,7 +24,7 @@ export const getAllTours = async (req, res) => {
 
     // 2) Sorting
     if (req.query.sort) {
-      const sortBy = req.query.sort.replace(',', ' ');
+      const sortBy = req.query.sort.replaceAll(',', ' ');
       query = query.sort(sortBy);
     } else {
       query = query.sort('-createdAt');
@@ -25,7 +32,7 @@ export const getAllTours = async (req, res) => {
 
     // 3) Fields Limiging
     if (req.query.fields) {
-      const fields = req.query.fields.replace(',', ' ');
+      const fields = req.query.fields.replaceAll(',', ' ');
       query = query.select(fields);
     } else {
       query = query.select('-__v');
