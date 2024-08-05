@@ -2,7 +2,6 @@ import Tour from '../models/tourModel.js';
 
 export const getAllTours = async (req, res) => {
   try {
-    console.log(req.query);
     // 1b) Filtering
     let queryObj = { ...req.query };
     const excluded = ['page', 'sort', 'limit', 'fields'];
@@ -14,15 +13,26 @@ export const getAllTours = async (req, res) => {
     queryObj = JSON.parse(queryString);
 
     // 1B) Advanced Filtering
-    console.log(queryObj);
     let query = Tour.find(queryObj);
 
-    // 3) Sorting
+    // 2) Sorting
     if (req.query.sort) {
       const sortBy = req.query.sort.replace(',', ' ');
       query = query.sort(sortBy);
     } else {
       query = query.sort('-createdAt');
+    }
+
+    // 3) Fields Limiging
+    if (req.query.fields) {
+      const fields = req.query.fields.replace(',', ' ');
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v');
+    }
+
+    if (req.query.limit) {
+      query.limit(req.query.limit);
     }
 
     // RUN THE QUERY
