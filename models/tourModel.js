@@ -1,4 +1,6 @@
 import { Schema, model } from 'mongoose';
+import slugify from 'slugify';
+
 const tourSchema = new Schema(
   {
     name: {
@@ -6,6 +8,7 @@ const tourSchema = new Schema(
       required: [true, 'A tour must have a name.'],
       unique: true,
     },
+    slug: String,
     duration: {
       type: Number,
       required: [true, 'A tour must have a duration.'],
@@ -59,6 +62,23 @@ const tourSchema = new Schema(
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
+});
+
+// Document Middleware: runs before .save() and .create()
+tourSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+tourSchema.pre('save', function (next) {
+  console.log('The second pre middleware is running');
+  next();
+});
+
+tourSchema.post('save', function (doc, next) {
+  console.log(doc);
+  console.log('The document saved successfully');
+  next();
 });
 
 export default model('Tour', tourSchema);
