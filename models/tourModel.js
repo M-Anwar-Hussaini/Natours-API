@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import slugify from 'slugify';
+// import slugify from 'slugify';
 
 const tourSchema = new Schema(
   {
@@ -53,6 +53,10 @@ const tourSchema = new Schema(
     },
     images: [String],
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -65,6 +69,8 @@ tourSchema.virtual('durationWeeks').get(function () {
 });
 
 // Document Middleware: runs before .save() and .create()
+
+/*
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
@@ -78,6 +84,29 @@ tourSchema.pre('save', function (next) {
 tourSchema.post('save', function (doc, next) {
   console.log(doc);
   console.log('The document saved successfully');
+  next();
+});
+*/
+
+// QUERY MIDDLWARE:
+/*
+tourSchema.pre(/^find/, function (next) {
+  this.find({ secretTour: { $ne: true } });
+  this.start = Date.now();
+  next();
+});
+
+tourSchema.post(/^find/, function (docs, next) {
+  console.log(docs);
+  console.log(`The query took ${Date.now() - this.start} milliseconds.`);
+  next();
+});
+*/
+
+tourSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({
+    $match: { secretTour: { $ne: true } },
+  });
   next();
 });
 
