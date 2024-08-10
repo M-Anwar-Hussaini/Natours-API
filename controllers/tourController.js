@@ -103,7 +103,7 @@ export const deleteTour = async (req, res) => {
     });
   }
 };
-
+// Some new code
 export const getTourStats = async (req, res) => {
   try {
     const stats = await Tour.aggregate([
